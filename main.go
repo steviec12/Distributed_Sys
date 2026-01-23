@@ -14,7 +14,7 @@ func main() {
 	router.PUT("/albums/:id", updateAlbum)
 	router.DELETE("/albums/:id", deleteAlbum)
 
-	router.Run("0.0.0.0:8080")
+	router.Run(":8080")
 }
 
 // album represents data about a record album.
