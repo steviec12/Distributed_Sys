@@ -1,2 +1,5 @@
 *.db
 db-version/*.db
+.terraform/
+*.tfstate
+*.tfstate.backup
