@@ -1,0 +1,18 @@
+FROM golang:latest
+
+WORKDIR /app
+
+# Copy go mod/sum from the mapreduce directory
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the source code
+COPY mapper.go ./
+
+# Build the mapper
+RUN go build -o /server mapper.go
+
+EXPOSE 8081
+
+CMD ["/server"]
+
