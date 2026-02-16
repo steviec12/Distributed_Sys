@@ -1,5 +1,21 @@
 *.db
 db-version/*.db
+
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.backup
+*.tfvars
+
+# Sensitive data
+.env
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.pyc
+
+# Binaries
+*.exe
+*.out
