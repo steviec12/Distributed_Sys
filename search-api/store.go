@@ -38,7 +38,7 @@ func generateProducts() {
 	}
 }
 
-const maxCheck = 100
+const maxCheck = 10_000
 const maxResults = 20
 
 // searchProducts checks exactly 100 products and returns up to 20 case-insensitive matches.
