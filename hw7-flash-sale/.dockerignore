@@ -1,0 +1,6 @@
+.git
+.gocache
+runtime
+terraform/.terraform
+terraform/.terraform.lock.hcl
+*.log
