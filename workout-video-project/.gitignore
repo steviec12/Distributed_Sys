@@ -1,0 +1,6 @@
+uploads/*
+!uploads/.gitkeep
+worker/__pycache__/
+worker/.venv/
+.cache/
+api/api
