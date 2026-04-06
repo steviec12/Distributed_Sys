@@ -1,0 +1,10 @@
+aws_region       = "us-west-2"
+ssh_key_name     = "REPLACE_WITH_YOUR_KEY_PAIR_NAME"
+ssh_cidr         = "REPLACE_WITH_YOUR_PUBLIC_IP/32"
+app_access_cidrs = ["REPLACE_WITH_YOUR_PUBLIC_IP/32"]
+
+# Optional overrides
+# instance_type         = "t2.micro"
+# tester_instance_type  = "t2.micro"
+# create_tester_instance = true
+# subnet_id             = ""

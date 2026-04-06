@@ -1,0 +1,11 @@
+.gocache/
+.gocache*/
+.mplcache/
+cloud_targets.env
+hw10
+results/
+scripts/__pycache__/
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars

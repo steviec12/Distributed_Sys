@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euxo pipefail
+
+dnf update -y
+dnf install -y docker git python3
+
+systemctl enable --now docker
+usermod -aG docker ec2-user
+
+mkdir -p /home/ec2-user/hw10
+chown -R ec2-user:ec2-user /home/ec2-user/hw10
+
+cat >/etc/motd <<'EOF'
+HW10 bootstrap complete.
+Node name: ${node_name}
+Application port: ${app_port}
+EOF
