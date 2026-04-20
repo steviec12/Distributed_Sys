@@ -1,0 +1,29 @@
+{
+  "serviceName": "workout-video-api",
+  "cluster": "__ECS_CLUSTER_ARN__",
+  "taskDefinition": "workout-video-api",
+  "desiredCount": 1,
+  "launchType": "FARGATE",
+  "platformVersion": "LATEST",
+  "enableExecuteCommand": true,
+  "healthCheckGracePeriodSeconds": 60,
+  "deploymentConfiguration": {
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 100
+  },
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": ["__SUBNET_ID_A__", "__SUBNET_ID_B__"],
+      "securityGroups": ["__API_SECURITY_GROUP_ID__"],
+      "assignPublicIp": "ENABLED"
+    }
+  },
+  "loadBalancers": [
+    {
+      "targetGroupArn": "__API_TARGET_GROUP_ARN__",
+      "containerName": "api",
+      "containerPort": 8080
+    }
+  ],
+  "propagateTags": "SERVICE"
+}

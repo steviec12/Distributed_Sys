@@ -4,31 +4,96 @@ services:
     ports:
       - "6379:6379"
 
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+    ports:
+      - "8000:8000"
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
   api:
     build:
       context: ./api
     environment:
+      DEPLOYMENT_MODE: "local"
       PORT: "8080"
       REDIS_ADDR: "redis:6379"
       REDIS_DB: "0"
-      UPLOAD_DIR: "/app/uploads"
+      DYNAMO_ENABLED: "true"
+      AWS_REGION: "us-west-2"
+      DYNAMO_ENDPOINT: "http://dynamodb-local:8000"
+      DYNAMO_TABLE_NAME: "workout_jobs"
+      DYNAMO_AUTO_CREATE_TABLE: "true"
+      S3_ENABLED: "true"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_PUBLIC_ENDPOINT: "http://localhost:9000"
+      S3_BUCKET: "workout-videos"
+      S3_ACCESS_KEY_ID: "minioadmin"
+      S3_SECRET_ACCESS_KEY: "minioadmin"
+      S3_USE_PATH_STYLE: "true"
+      S3_AUTO_CREATE_BUCKET: "true"
+      S3_PRESIGN_EXPIRATION_SECONDS: "3600"
+      MULTIPART_PART_SIZE_BYTES: "5242880"
     depends_on:
       - redis
+      - dynamodb-local
+      - minio
     ports:
       - "8080:8080"
-    volumes:
-      - ./uploads:/app/uploads
 
   worker:
     build:
-      context: ./worker
+      context: ./go-worker
     environment:
+      DEPLOYMENT_MODE: "local"
       REDIS_ADDR: "redis:6379"
       REDIS_DB: "0"
       QUEUE_KEY: "queue:pending"
-      UPLOAD_DIR: "/app/uploads"
+      PROCESSING_QUEUE_KEY: "queue:processing"
+      RETRYABLE_FAILED_SET_KEY: "set:retryable_failed"
+      HEARTBEAT_INTERVAL_SECONDS: "2"
+      MAX_RETRIES: "3"
+      DYNAMO_ENABLED: "true"
+      AWS_REGION: "us-west-2"
+      DYNAMO_ENDPOINT: "http://dynamodb-local:8000"
+      DYNAMO_TABLE_NAME: "workout_jobs"
+      S3_ENABLED: "true"
+      S3_ENDPOINT: "http://minio:9000"
+      S3_BUCKET: "workout-videos"
+      S3_ACCESS_KEY_ID: "minioadmin"
+      S3_SECRET_ACCESS_KEY: "minioadmin"
+      S3_USE_PATH_STYLE: "true"
     depends_on:
       - redis
-    volumes:
-      - ./uploads:/app/uploads
+      - dynamodb-local
+      - minio
 
+  reaper:
+    build:
+      context: ./reaper
+    environment:
+      DEPLOYMENT_MODE: "local"
+      REDIS_ADDR: "redis:6379"
+      REDIS_DB: "0"
+      QUEUE_KEY: "queue:pending"
+      PROCESSING_QUEUE_KEY: "queue:processing"
+      RETRYABLE_FAILED_SET_KEY: "set:retryable_failed"
+      REAPER_INTERVAL_SECONDS: "3"
+      STALE_TIMEOUT_SECONDS: "12"
+      MAX_RETRIES: "3"
+      DYNAMO_ENABLED: "true"
+      AWS_REGION: "us-west-2"
+      DYNAMO_ENDPOINT: "http://dynamodb-local:8000"
+      DYNAMO_TABLE_NAME: "workout_jobs"
+    depends_on:
+      - redis
+      - dynamodb-local

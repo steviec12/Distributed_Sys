@@ -1,0 +1,42 @@
+{
+  "family": "workout-video-reaper",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "__EXECUTION_ROLE_ARN__",
+  "taskRoleArn": "__TASK_ROLE_ARN__",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "reaper",
+      "image": "__REAPER_IMAGE_URI__",
+      "essential": true,
+      "environment": [
+        { "name": "DEPLOYMENT_MODE", "value": "aws" },
+        { "name": "REDIS_ADDR", "value": "__REDIS_ENDPOINT__" },
+        { "name": "REDIS_DB", "value": "0" },
+        { "name": "QUEUE_KEY", "value": "queue:pending" },
+        { "name": "PROCESSING_QUEUE_KEY", "value": "queue:processing" },
+        { "name": "RETRYABLE_FAILED_SET_KEY", "value": "set:retryable_failed" },
+        { "name": "REAPER_INTERVAL_SECONDS", "value": "3" },
+        { "name": "STALE_TIMEOUT_SECONDS", "value": "12" },
+        { "name": "MAX_RETRIES", "value": "3" },
+        { "name": "DYNAMO_ENABLED", "value": "true" },
+        { "name": "AWS_REGION", "value": "__AWS_REGION__" },
+        { "name": "DYNAMO_TABLE_NAME", "value": "__DYNAMO_TABLE_NAME__" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/workout-video-reaper",
+          "awslogs-region": "__AWS_REGION__",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

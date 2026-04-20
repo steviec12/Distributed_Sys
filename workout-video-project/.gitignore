@@ -4,3 +4,12 @@ worker/__pycache__/
 worker/.venv/
 .cache/
 api/api
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+CLAUDE.md
+AWS_DEPLOYMENT.md
+infra/terraform/terraform.tfvars
+PROJECT_MANAGEMENT.txt
+LESSONS_LEARNED.txt

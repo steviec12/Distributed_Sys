@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/api .
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/reaper .
 
 FROM alpine:3.22
 
@@ -16,10 +16,8 @@ RUN apk add --no-cache ca-certificates \
 
 WORKDIR /app
 
-COPY --from=builder /out/api /app/api
+COPY --from=builder /out/reaper /app/reaper
 
 USER app
 
-EXPOSE 8080
-
-ENTRYPOINT ["/app/api"]
+ENTRYPOINT ["/app/reaper"]

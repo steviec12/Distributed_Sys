@@ -1,0 +1,43 @@
+{
+  "family": "workout-video-worker",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "__EXECUTION_ROLE_ARN__",
+  "taskRoleArn": "__TASK_ROLE_ARN__",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "worker",
+      "image": "__WORKER_IMAGE_URI__",
+      "essential": true,
+      "environment": [
+        { "name": "DEPLOYMENT_MODE", "value": "aws" },
+        { "name": "REDIS_ADDR", "value": "__REDIS_ENDPOINT__" },
+        { "name": "REDIS_DB", "value": "0" },
+        { "name": "QUEUE_KEY", "value": "queue:pending" },
+        { "name": "PROCESSING_QUEUE_KEY", "value": "queue:processing" },
+        { "name": "RETRYABLE_FAILED_SET_KEY", "value": "set:retryable_failed" },
+        { "name": "HEARTBEAT_INTERVAL_SECONDS", "value": "2" },
+        { "name": "MAX_RETRIES", "value": "3" },
+        { "name": "DYNAMO_ENABLED", "value": "true" },
+        { "name": "AWS_REGION", "value": "__AWS_REGION__" },
+        { "name": "DYNAMO_TABLE_NAME", "value": "__DYNAMO_TABLE_NAME__" },
+        { "name": "S3_ENABLED", "value": "true" },
+        { "name": "S3_BUCKET", "value": "__S3_BUCKET__" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/workout-video-worker",
+          "awslogs-region": "__AWS_REGION__",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

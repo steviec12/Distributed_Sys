@@ -1,0 +1,47 @@
+{
+  "family": "workout-video-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "__EXECUTION_ROLE_ARN__",
+  "taskRoleArn": "__TASK_ROLE_ARN__",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "__API_IMAGE_URI__",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "DEPLOYMENT_MODE", "value": "aws" },
+        { "name": "PORT", "value": "8080" },
+        { "name": "REDIS_ADDR", "value": "__REDIS_ENDPOINT__" },
+        { "name": "REDIS_DB", "value": "0" },
+        { "name": "DYNAMO_ENABLED", "value": "true" },
+        { "name": "AWS_REGION", "value": "__AWS_REGION__" },
+        { "name": "DYNAMO_TABLE_NAME", "value": "__DYNAMO_TABLE_NAME__" },
+        { "name": "S3_ENABLED", "value": "true" },
+        { "name": "S3_BUCKET", "value": "__S3_BUCKET__" },
+        { "name": "S3_PRESIGN_EXPIRATION_SECONDS", "value": "3600" },
+        { "name": "MULTIPART_PART_SIZE_BYTES", "value": "5242880" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/workout-video-api",
+          "awslogs-region": "__AWS_REGION__",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

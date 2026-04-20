@@ -1,0 +1,21 @@
+{
+  "serviceName": "workout-video-reaper",
+  "cluster": "__ECS_CLUSTER_ARN__",
+  "taskDefinition": "workout-video-reaper",
+  "desiredCount": 1,
+  "launchType": "FARGATE",
+  "platformVersion": "LATEST",
+  "enableExecuteCommand": true,
+  "deploymentConfiguration": {
+    "maximumPercent": 100,
+    "minimumHealthyPercent": 0
+  },
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "subnets": ["__SUBNET_ID_A__", "__SUBNET_ID_B__"],
+      "securityGroups": ["__REAPER_SECURITY_GROUP_ID__"],
+      "assignPublicIp": "ENABLED"
+    }
+  },
+  "propagateTags": "SERVICE"
+}

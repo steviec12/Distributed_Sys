@@ -1,0 +1,20 @@
+aws_region   = "us-west-2"
+project_name = "workout-video"
+
+# Leave these empty in Learner Lab if you want Terraform to use the default VPC
+# and auto-select two subnets from it.
+vpc_id     = ""
+subnet_ids = []
+
+api_image_uri    = "123456789012.dkr.ecr.us-west-2.amazonaws.com/workout-video-api:latest"
+worker_image_uri = "123456789012.dkr.ecr.us-west-2.amazonaws.com/workout-video-worker:latest"
+reaper_image_uri = "123456789012.dkr.ecr.us-west-2.amazonaws.com/workout-video-reaper:latest"
+
+redis_endpoint      = "example-redis.xxxxxx.use2.cache.amazonaws.com:6379"
+# redis_password    = "set-this-only-if-your-redis-requires-auth"
+dynamodb_table_name = "workout_jobs"
+s3_bucket_name      = "workout-video-bucket-example"
+
+api_desired_count    = 1
+worker_desired_count = 1
+reaper_desired_count = 1
